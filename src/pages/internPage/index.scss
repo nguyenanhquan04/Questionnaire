@@ -1,0 +1,52 @@
+.home-page {
+    padding: 20px;
+  
+    .question-input {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+  
+      input {
+        flex-grow: 1;
+        padding: 10px;
+      }
+  
+      button {
+        padding: 10px 20px;
+        background-color: #2980b9;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+      }
+    }
+  
+    .question-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+  
+    .question-card {
+      background-color: #e74c3c;
+      padding: 20px;
+      border-radius: 8px;
+      color: #fff;
+      min-height: 150px;
+      position: relative;
+  
+      .card-actions {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+  
+        button {
+          background-color: rgba(255, 255, 255, 0.2);
+          color: #fff;
+          border: none;
+          margin-left: 5px;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+  

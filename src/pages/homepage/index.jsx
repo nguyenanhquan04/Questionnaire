@@ -1,5 +1,3 @@
-// src/pages/HomePage/index.jsx
-
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../homepage/index.scss';

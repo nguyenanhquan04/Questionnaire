@@ -1,25 +1,21 @@
-import React, { Suspense } from "react";
-import { BrowserRouter as Router, Routes, Route, useNavigate } from "react-router-dom";
-import ROUTES from "./routes";
+import React from 'react';
+import { Provider } from 'react-redux';
+import Header from './components/Header';
+import Footer from './components/Footer';
+import AppRoutes from './AppRoutes';
+import store from './store';
 
-const Home = React.lazy(() => import('../src/pages/homepage'));
-const SignInPage = React.lazy(() => import('../src/pages/signIn'));
-const InternPage = React.lazy(() => import('../src/pages/internPage'));
-const AdminPage = React.lazy(() => import('../src/pages/adminPage'));
-
+import './App.scss';
 
 function App() {
   return (
-    <Router>
-      <Suspense fallback={<div>Loading...</div>}>
-        <Routes>
-          <Route path={ROUTES.home} element={<Home />} />
-          <Route path={ROUTES.signIn} element={<SignInPage />} />
-          <Route path={ROUTES.internPage} element={<InternPage />} />
-          <Route path={ROUTES.adminPage} element={<AdminPage />} />
-        </Routes>
-      </Suspense>
-    </Router>
+    <Provider store={store}>
+      <div className="App">
+        <Header />
+        <AppRoutes />
+        <Footer />
+      </div>
+    </Provider>
   );
 }
 
