@@ -66,7 +66,7 @@ const AdminPage = () => {
 
   return (
     <div className="admin-page">
-      <Title level={2}>Admin: Answer Questions</Title>
+      <Title level={2} style={{ color: 'black' }}>Admin: Answer Questions</Title>
       
       <div style={{ marginBottom: 16 }}>
         <Select defaultValue="all" onChange={handleFilterChange} style={{ width: 200 }}>
@@ -89,7 +89,7 @@ const AdminPage = () => {
                       position: 'absolute', 
                       top: 0, 
                       right: 0, 
-                      color: 'red', 
+                      color: 'white', 
                       fontSize: '16px', 
                       cursor: 'pointer' 
                     }}

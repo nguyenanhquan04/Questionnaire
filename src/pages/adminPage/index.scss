@@ -1,33 +1,97 @@
 .admin-page {
-    padding: 20px;
-  
-    .question-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 20px;
-    }
-  
-    .question-card {
-      background-color: #e74c3c;
-      padding: 20px;
-      border-radius: 8px;
+  padding: 20px;
+
+  .ant-select {
+    margin-bottom: 16px;
+    width: 200px;
+  }
+
+  .ant-row {
+    margin-bottom: 16px;
+  }
+
+  .ant-card {
+    background-color: #e74c3c;
+    color: #fff;
+    border-radius: 8px;
+    min-height: 150px;
+    position: relative;
+  }
+
+  .ant-card-head {
+    background-color: transparent;
+    border-bottom: none;
+  }
+
+  .ant-card-body {
+    padding: 16px;
+    color: #fff;
+  }
+
+  .ant-card-actions {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+
+    .ant-btn {
+      background-color: rgba(255, 255, 255, 0.2);
       color: #fff;
-      min-height: 150px;
-      position: relative;
-  
-      .card-actions {
-        position: absolute;
-        bottom: 10px;
-        right: 10px;
-  
-        button {
-          background-color: rgba(255, 255, 255, 0.2);
-          color: #fff;
-          border: none;
-          margin-left: 5px;
-          cursor: pointer;
-        }
+      border: none;
+      margin-left: 5px;
+      cursor: pointer;
+    }
+  }
+
+  .ant-modal {
+    .ant-modal-header {
+      background-color: #333;
+      color: #fff;
+    }
+
+    .ant-modal-title {
+      color: #fff;
+    }
+
+    .ant-modal-body {
+      background-color: #444;
+      color: #fff;
+    }
+
+    .ant-input {
+      background-color: #555;
+      color: #fff;
+      border: 1px solid #777;
+
+      &::placeholder {
+        color: #bbb;
       }
+    }
+
+    .ant-btn-primary {
+      background-color: #e74c3c;
+      border: none;
+    }
+
+    .ant-btn-default {
+      border: 1px solid #777;
+      color: #fff;
     }
   }
   
+  .ant-modal-confirm-body {
+    color: #fff;
+  }
+
+  .ant-typography {
+    color: #fff;
+  }
+
+  .delete-icon {
+    position: absolute;
+    top: 0;
+    right: 0;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+  }
+}
