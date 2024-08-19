@@ -1,38 +1,31 @@
-import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
-import { setRole } from "../slices/authSlice";
+import {jwtDecode} from "jwt-decode";
 import "./Header.scss";
+import { logOut } from "../api/AuthService";
 
-const Header = () => {
-  const role = useSelector((state) => state.auth.role);
-  const dispatch = useDispatch();
-
-  // State to store the user and userName
-  const [user, setUser] = useState(null);
+const Header = ({ token }) => {
   const [userName, setUserName] = useState("");
+  const [role, setRole] = useState(null);
 
   useEffect(() => {
-    // Retrieve user from localStorage on component mount
-    const storedUser = JSON.parse(localStorage.getItem("user"));
-    if (storedUser) {
-      setUser(storedUser);
-      setUserName(storedUser.name);
+    if (token) {
+      try {
+        const decodedToken = jwtDecode(token);
+        setUserName(decodedToken.sub);
+        setRole(decodedToken.role);
+      } catch (error) {
+        console.error("Invalid token:", error);
+      }
+    } else {
+      setUserName("");
+      setRole(null);
     }
-  }, [role]); // Empty dependency array ensures this runs only on mount
+  }, [token]);
 
   const handleLogout = () => {
-    // Remove user from localStorage
-    localStorage.removeItem("user");
-
-    // Update the local state
-    setUser(null);
-    setUserName("");
-
-    // Optionally, update the Redux store if needed
-    dispatch(setRole("intern")); // or whatever default role you want to set
-
-    // Redirect to login page or home page
-    window.location.href = "/login"; // adjust to your login page route
+    logOut(token);
+    localStorage.removeItem("authToken");
+    window.location.href = "/login"; // Adjust to your login page route
   };
 
   return (
@@ -48,7 +41,7 @@ const Header = () => {
             </li>
           )}
           {userName && <li>Hello, {userName}</li>}
-          {user && (
+          {token && (
             <li>
               <button id="LogOutBtn" onClick={handleLogout}>
                 Log Out
