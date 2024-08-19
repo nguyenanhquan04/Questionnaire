@@ -1,63 +1,44 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaUser, FaLock, FaAngleDown } from "react-icons/fa";
-import { setRole } from "../../slices/authSlice";
-import { fetchUsers } from "../../api/userApi"; // Adjust path as necessary
+import { FaUser, FaLock } from "react-icons/fa";
 import "../signIn/index.scss";
 import ROUTES from "../../routes";
-import { useDispatch } from "react-redux";
+import { login } from "../../api/AuthService";
+import {jwtDecode} from "jwt-decode";
 
-const Login = () => {
+const Login = ({ onLogin }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [users, setUsers] = useState([]);
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    const loadUsers = async () => {
-      try {
-        const fetchedUsers = await fetchUsers();
-        setUsers(fetchedUsers); // Store fetched users in state
-      } catch (error) {
-        console.error("Error fetching users:", error);
-      }
-    };
-
-    loadUsers();
-  }, []);
 
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
+    
+    try {
+      const user = await login(username, password);
+      const authToken = user.data.token;
 
-    const user = users.find(
-      (u) => u.username === username && u.password === password
-    );
+      if (user) {
+        localStorage.setItem("authToken", JSON.stringify(authToken));
+        const decodedToken = jwtDecode(authToken);
 
-    if (user) {
-      // Save user data to localStorage
-      localStorage.setItem("user", JSON.stringify(user));
-      dispatch(setRole(user.role));
+        // Notify the Header component about the login
+        onLogin(authToken);
 
-      if (user.role === "Admin") {
-        navigate(ROUTES.adminPage); // Redirect to Admin Page
-      } else if (user.role === "Intern") {
-        navigate(ROUTES.internPage); // Redirect to Intern Page
+        if (decodedToken.role === "ADMIN") {
+          navigate(ROUTES.adminPage); 
+        } else if (decodedToken.role === "INTERN") {
+          navigate(ROUTES.internPage); 
+        }
+      } 
+    } catch (error) {
+      if (error.response && error.response.status === 403) {
+        alert("Username or password is incorrect or account does not exist");
+      } else {
+        alert("An unexpected error occurred. Please try again.");
       }
-    } else {
-      alert("Invalid username or password");
+      console.error("Login failed", error);
     }
-  };
-
-  const toggleDropdown = () => {
-    setDropdownOpen(!dropdownOpen);
-  };
-
-  const handleSelectUser = (user) => {
-    setUsername(user.username);
-    setPassword(user.password);
-    setDropdownOpen(false);
   };
 
   return (
@@ -85,34 +66,6 @@ const Login = () => {
           <FaLock className="icon" />
         </div>
         <button type="submit">Login</button>
-        <button
-          type="button"
-          onClick={toggleDropdown}
-          className="dropdown-toggle"
-        >
-          <FaAngleDown /> Sample Accounts
-        </button>
-        {dropdownOpen && (
-          <div className="dropdown-menu">
-            {users.map((user) => (
-              <div
-                key={user.userId}
-                onClick={() => handleSelectUser(user)}
-                className="dropdown-item"
-              >
-                <div className="dropdown-item-content">
-                  <div className="dropdown-item-username">
-                    Username: {user.username}
-                  </div>
-                  <div className="dropdown-item-password">
-                    Password: {user.password}
-                  </div>
-                  <div className="dropdown-item-role">Role: {user.role}</div>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
       </form>
     </div>
   );
