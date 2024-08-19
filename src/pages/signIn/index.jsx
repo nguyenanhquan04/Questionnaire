@@ -1,16 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { FaUser, FaLock, FaAngleDown } from 'react-icons/fa';
-import { fetchUsers } from '../../api/userApi'; // Adjust path as necessary
-import '../signIn/index.scss';
-import ROUTES from '../../routes';
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { FaUser, FaLock, FaAngleDown } from "react-icons/fa";
+import { setRole } from "../../slices/authSlice";
+import { fetchUsers } from "../../api/userApi"; // Adjust path as necessary
+import "../signIn/index.scss";
+import ROUTES from "../../routes";
+import { useDispatch } from "react-redux";
 
 const Login = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [users, setUsers] = useState([]);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const loadUsers = async () => {
@@ -18,7 +21,7 @@ const Login = () => {
         const fetchedUsers = await fetchUsers();
         setUsers(fetchedUsers); // Store fetched users in state
       } catch (error) {
-        console.error('Error fetching users:', error);
+        console.error("Error fetching users:", error);
       }
     };
 
@@ -34,15 +37,16 @@ const Login = () => {
 
     if (user) {
       // Save user data to localStorage
-      localStorage.setItem('user', JSON.stringify(user));
+      localStorage.setItem("user", JSON.stringify(user));
+      dispatch(setRole(user.role));
 
-      if (user.role === 'Admin') {
+      if (user.role === "Admin") {
         navigate(ROUTES.adminPage); // Redirect to Admin Page
-      } else if (user.role === 'Intern') {
+      } else if (user.role === "Intern") {
         navigate(ROUTES.internPage); // Redirect to Intern Page
       }
     } else {
-      alert('Invalid username or password');
+      alert("Invalid username or password");
     }
   };
 
@@ -57,40 +61,52 @@ const Login = () => {
   };
 
   return (
-    <div className='wrapper'>
+    <div className="wrapper">
       <form onSubmit={handleLoginSubmit}>
         <h1>Login</h1>
         <div className="input-box">
           <input
             type="text"
-            placeholder='Username'
+            placeholder="Username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             required
           />
-          <FaUser className='icon'/>
+          <FaUser className="icon" />
         </div>
         <div className="input-box">
           <input
             type="password"
-            placeholder='Password'
+            placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-          <FaLock className='icon'/>
+          <FaLock className="icon" />
         </div>
-        <button type='submit'>Login</button>
-        <button type="button" onClick={toggleDropdown} className="dropdown-toggle">
+        <button type="submit">Login</button>
+        <button
+          type="button"
+          onClick={toggleDropdown}
+          className="dropdown-toggle"
+        >
           <FaAngleDown /> Sample Accounts
         </button>
         {dropdownOpen && (
           <div className="dropdown-menu">
             {users.map((user) => (
-              <div key={user.userId} onClick={() => handleSelectUser(user)} className="dropdown-item">
+              <div
+                key={user.userId}
+                onClick={() => handleSelectUser(user)}
+                className="dropdown-item"
+              >
                 <div className="dropdown-item-content">
-                  <div className="dropdown-item-username">Username: {user.username}</div>
-                  <div className="dropdown-item-password">Password: {user.password}</div>
+                  <div className="dropdown-item-username">
+                    Username: {user.username}
+                  </div>
+                  <div className="dropdown-item-password">
+                    Password: {user.password}
+                  </div>
                   <div className="dropdown-item-role">Role: {user.role}</div>
                 </div>
               </div>
@@ -100,6 +116,6 @@ const Login = () => {
       </form>
     </div>
   );
-}
+};
 
 export default Login;
