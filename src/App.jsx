@@ -17,7 +17,9 @@ function App() {
     <Provider store={store}>
       <div className="App">
         <Header token={token} />
-        <AppRoutes onLogin={handleLogin} />
+        <div className="content">
+          <AppRoutes onLogin={handleLogin} />
+        </div>
         <Footer />
       </div>
     </Provider>
