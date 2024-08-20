@@ -1,10 +1,20 @@
 .App {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  }
+  
+  .content {
+    flex: 1;  // This makes the content area take up the remaining space between the header and footer
+    flex-grow: 1;  // Allow the content to grow and fill the remaining space
+    overflow-y: auto;  // Allow scrolling if content overflows
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 
-main {
-  flex-grow: 1;
-  // padding: 20px;
-}
+  main {
+    flex-grow: 1;
+    // padding: 20px;
+  }
+  
