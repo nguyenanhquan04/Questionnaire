@@ -21,8 +21,6 @@
     display: flex;
     justify-content: flex-start;
     /* Align cards to the left initially */
-    padding-left: 60px;
-    /* Adjust this value to move the cards to the right */
   }
 
   .ant-card {
@@ -33,10 +31,8 @@
     min-height: 150px;
     position: relative;
     margin: 10px;
-    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
+    box-shadow: 5px 5px 15px rgba(214, 214, 214, 0.3);
     /* Shadow to make the cards pop */
-    transform: translateX(10px);
-    /* Move the cards slightly to the right */
   }
 
   .ant-card-head {
@@ -137,6 +133,15 @@
     font-size: 24px;
     z-index: 1;
     color: red;
+  }
+
+  .answer-button {
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  .answer-button:hover {
+    background-color: #0050b3;
+    color: #fff;
   }
 }
 
