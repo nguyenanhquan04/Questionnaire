@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Card, Button, Row, Col, Typography, Modal, Input, Select } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
@@ -28,6 +28,7 @@ const AdminPage = () => {
   const handleOk = () => {
     if (answer) {
       dispatch(answerQuestion({ id: currentQuestion.id, answer })); // Dispatch the action
+      notifySuccess('Question answered successfully');
       setIsModalOpen(false);
       setAnswer('');
     }
@@ -65,40 +66,50 @@ const AdminPage = () => {
   });
 
   return (
-    <div className="admin-page">
-      <Title level={2} style={{ color: 'black' }}>Admin: Answer Questions</Title>
-      
-      <div style={{ marginBottom: 16 }}>
-        <Select defaultValue="all" onChange={handleFilterChange} style={{ width: 200 }}>
+    <div className="admin-page" style={{ margin: '20px auto', padding: '20px', background: '#fff' }}>
+      {/* <Title level={2} style={{ color: 'gray' }}>Admin: Answer Questions</Title> */}
+
+      <div style={{ marginBottom: 16, textAlign: 'center' }}>
+        <Select defaultValue="all" onChange={handleFilterChange} style={{ width: 200 }} className="blue-select">
           <Option value="all">All Questions</Option>
           <Option value="answered">Answered</Option>
           <Option value="unanswered">Unanswered</Option>
         </Select>
       </div>
 
-      <Row gutter={[16, 16]}>
+      <Row gutter={[16, 16]} justify="center">
         {filteredQuestions.map((question) => (
-          <Col key={question.id} xs={24} sm={12} md={8}>
+          <Col key={question.id} xs={24} sm={12} md={6}>
             <Card
               size="small"
+              hoverable
+              style={{
+                width: 240,
+                margin: '10px',
+                background: ['#ffc', '#cfc', '#ccf'][question.id % 3],
+                transform: `rotate(${(question.id % 2 === 0 ? 4 : -4) + (question.id % 3 === 0 ? -3 : 0)}deg)`,
+                boxShadow: '5px 5px 7px rgba(33,33,33,.7)',
+                transition: 'transform .15s linear',
+              }}
               title={
                 <div style={{ position: 'relative' }}>
-                  <Text>{question.text}</Text>
+                  <Text style={{ color: 'black' }}>{question.text}</Text>
                   <DeleteOutlined
-                    style={{ 
-                      position: 'absolute', 
-                      top: 0, 
-                      right: 0, 
-                      color: 'white', 
-                      fontSize: '16px', 
-                      cursor: 'pointer' 
+                    style={{
+                      position: 'absolute',
+                      top: 0,
+                      right: 0,
+                      color: 'red',
+                      fontSize: '16px',
+                      cursor: 'pointer',
                     }}
                     onClick={() => showDeleteConfirm(question)}
                   />
                 </div>
               }
             >
-              <Text strong>Answer:</Text> <Text>{question.answer || 'No answer yet'}</Text>
+              <Text strong style={{ color: 'black' }}>Answer:</Text> 
+              <Text style={{ color: 'black' }}>{question.answer || 'No answer yet'}</Text>
               <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 10 }}>
                 <Button type="primary" onClick={() => showAnswerModal(question)}>
                   Answer
@@ -120,8 +131,8 @@ const AdminPage = () => {
       >
         {currentQuestion && (
           <>
-            <Text strong>Question:</Text>
-            <p>{currentQuestion.text}</p>
+            <Text strong style={{ color: 'black' }}>Question:</Text>
+            <p style={{ color: 'black' }}>{currentQuestion.text}</p>
             <TextArea
               rows={4}
               value={answer}
@@ -141,7 +152,7 @@ const AdminPage = () => {
         okText="Yes, Delete"
         cancelText="Cancel"
       >
-        <p>{currentQuestion?.text}</p>
+        <p style={{ color: 'black' }}>{currentQuestion?.text}</p>
       </Modal>
 
       {/* Toast Notification Container */}
