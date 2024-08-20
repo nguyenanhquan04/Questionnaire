@@ -1,21 +1,42 @@
 .admin-page {
   padding: 20px;
+  margin-bottom: 40px;
 
   .ant-select {
     margin-bottom: 16px;
     width: 200px;
   }
 
-  .ant-row {
-    margin-bottom: 16px;
+  .card-container {
+    background-color: #e0b084;
+    /* Solid color for the board */
+    border: 10px solid #a0522d;
+    /* Border to simulate the wood frame */
+    border-radius: 12px;
+    /* Slightly rounded corners for a more realistic look */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    /* Shadow to add depth */
+    padding: 40px 0;
+    /* Space around the cards */
+    display: flex;
+    justify-content: flex-start;
+    /* Align cards to the left initially */
+    padding-left: 60px;
+    /* Adjust this value to move the cards to the right */
   }
 
   .ant-card {
-    background-color: #e74c3c;
-    color: #fff;
+    background-color: #fff3cd;
+    /* Light background color for the cards */
+    color: #000;
     border-radius: 8px;
     min-height: 150px;
     position: relative;
+    margin: 10px;
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
+    /* Shadow to make the cards pop */
+    transform: translateX(10px);
+    /* Move the cards slightly to the right */
   }
 
   .ant-card-head {
@@ -25,7 +46,7 @@
 
   .ant-card-body {
     padding: 16px;
-    color: #fff;
+    color: #000;
   }
 
   .ant-card-actions {
@@ -34,7 +55,7 @@
     right: 10px;
 
     .ant-btn {
-      background-color: rgba(255, 255, 255, 0.2);
+      background-color: #007bff;
       color: #fff;
       border: none;
       margin-left: 5px;
@@ -83,14 +104,14 @@
   }
 
   .ant-typography {
-    color: #fff;
+    color: #000;
   }
 
   .delete-icon {
     position: absolute;
     top: 0;
     right: 0;
-    color: white;
+    color: red;
     font-size: 16px;
     cursor: pointer;
   }
@@ -107,8 +128,18 @@
   .blue-select .ant-select-selection-item {
     color: white !important;
   }
+
+  .pin-icon {
+    position: absolute;
+    top: 2%;
+    left: 43%;
+    transform: translate(-50%, -50%);
+    font-size: 24px;
+    z-index: 1;
+    color: red;
+  }
 }
 
 body {
-  margin: 0%;
+  margin: 0;
 }
