@@ -9,32 +9,52 @@
 
   .card-container {
     background-color: #e0b084;
-    /* Solid color for the board */
     border: 10px solid #a0522d;
-    /* Border to simulate the wood frame */
     border-radius: 12px;
-    /* Slightly rounded corners for a more realistic look */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-    /* Shadow to add depth */
-    padding: 40px 0;
-    /* Space around the cards */
-    display: flex;
-    justify-content: flex-start;
-    /* Align cards to the left initially */
-    padding-left: 60px;
-    /* Adjusted value to move cards to the right */
+    padding: 40px 60px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    grid-gap: 16px;
+    /* Space between cards */
+    justify-items: center;
   }
 
   .ant-card {
     background-color: #fff3cd;
-    /* Light background color for the cards */
     color: #000;
     border-radius: 8px;
-    min-height: 150px;
+    width: 240px;
+    /* Ensure cards have a fixed width */
+    box-shadow: 5px 5px 7px rgba(33, 33, 33, 0.7);
+    transition: transform 0.15s linear;
+
+    &:nth-child(odd) {
+      transform: rotate(-1deg);
+    }
+
+    &:nth-child(even) {
+      transform: rotate(1deg);
+    }
+
+    &:hover {
+      transform: scale(1.05);
+    }
+
     position: relative;
-    margin: 10px;
-    box-shadow: 3px 5px 30px 0px rgba(178, 178, 178, 0.7);
-    /* Reduced shadow opacity for a lighter effect */
+    /* For pin positioning */
+  }
+
+  .pin-icon {
+    position: absolute;
+    top: -12px;
+    /* Slightly above the card */
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 24px;
+    color: red;
+    z-index: 1;
+    /* Ensure it's above the card */
   }
 
   .ant-card-head {
@@ -48,7 +68,7 @@
   }
 
   .ant-card-actions {
-    position: absolute;
+    position: relative;
     bottom: 10px;
     right: 10px;
 
@@ -58,51 +78,12 @@
       border: none;
       margin-left: 5px;
       cursor: pointer;
-    }
-  }
 
-  .ant-modal {
-    .ant-modal-header {
-      background-color: #333;
-      color: #fff;
-    }
-
-    .ant-modal-title {
-      color: #fff;
-    }
-
-    .ant-modal-body {
-      background-color: #444;
-      color: #fff;
-    }
-
-    .ant-input {
-      background-color: #555;
-      color: #fff;
-      border: 1px solid #777;
-
-      &::placeholder {
-        color: #bbb;
+      &:hover {
+        background-color: #0050b3;
+        color: #fff;
       }
     }
-
-    .ant-btn-primary {
-      background-color: #e74c3c;
-      border: none;
-    }
-
-    .ant-btn-default {
-      border: 1px solid #777;
-      color: #fff;
-    }
-  }
-
-  .ant-modal-confirm-body {
-    color: #fff;
-  }
-
-  .ant-typography {
-    color: #000;
   }
 
   .delete-icon {
@@ -114,36 +95,19 @@
     cursor: pointer;
   }
 
-  .blue-select .ant-select-selector {
-    background-color: #1677FF !important;
-    border-color: #1677FF !important;
-  }
+  .blue-select {
+    .ant-select-selector {
+      background-color: #1677ff !important;
+      border-color: #1677ff !important;
+    }
 
-  .blue-select .ant-select-arrow {
-    color: white !important;
-  }
+    .ant-select-arrow {
+      color: white !important;
+    }
 
-  .blue-select .ant-select-selection-item {
-    color: white !important;
-  }
-
-  .pin-icon {
-    position: absolute;
-    top: 2%;
-    left: 43%;
-    transform: translate(-50%, -50%);
-    font-size: 24px;
-    z-index: 1;
-    color: red;
-  }
-
-  .answer-button {
-    transition: background-color 0.3s ease, color 0.3s ease;
-  }
-
-  .answer-button:hover {
-    background-color: #0050b3;
-    color: #fff;
+    .ant-select-selection-item {
+      color: white !important;
+    }
   }
 }
 

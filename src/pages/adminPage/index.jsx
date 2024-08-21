@@ -64,6 +64,14 @@ const AdminPage = () => {
     }
   });
 
+  const getColSpan = () => {
+    const count = filteredQuestions.length;
+    if (count === 1) return 24; // Full width
+    if (count === 2) return 12; // Half width
+    if (count === 3) return 8;  // One-third width
+    return 6; // Default, one-fourth width
+  };
+
   return (
     <div className="admin-page">
       <div style={{ marginBottom: 2, textAlign: 'center' }}>
@@ -77,18 +85,26 @@ const AdminPage = () => {
       <div className="card-container">
         <Row gutter={[16, 16]} justify="center">
           {filteredQuestions.map((question) => (
-            <Col key={question.id} xs={24} sm={12} md={6}>
-              <div className="pin-icon">📌</div>
+            <Col 
+              key={question.id} 
+              xs={24} 
+              sm={getColSpan()} 
+              md={getColSpan()}
+              lg={getColSpan()}
+              xl={getColSpan()}
+              style={{ display: 'flex', justifyContent: 'center' }}
+            >
               <Card
                 size="small"
                 hoverable
                 style={{
                   width: 240,
                   margin: '10px',
-                  background: ['#FDBCCF','#F9E1E0' ,'#DFC7C1','#A2CDF2','#F2B9AC'][question.id % 5],
+                  background: ['#FDBCCF', '#F9E1E0', '#DFC7C1', '#A2CDF2', '#F2B9AC'][question.id % 5],
                   transform: `rotate(${(question.id % 2 === 0 ? 4 : -4) + (question.id % 3 === 0 ? -3 : 0)}deg)`,
                   boxShadow: '5px 5px 7px rgba(33,33,33,.7)',
                   transition: 'transform .15s linear',
+                  position: 'relative', // Ensure positioning for pin icon
                 }}
                 title={
                   <div style={{ position: 'relative' }}>
@@ -107,7 +123,8 @@ const AdminPage = () => {
                   </div>
                 }
               >
-                <Text strong style={{ color: 'black' }}>Answer:</Text> 
+                <div className="pin-icon">📌</div>
+                <Text strong style={{ color: 'black' }}>Answer:</Text>
                 <Text style={{ color: 'black' }}>{question.answer || 'No answer yet'}</Text>
                 <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 10 }}>
                   <Button type="primary" className="answer-button" onClick={() => showAnswerModal(question)}>
@@ -149,7 +166,7 @@ const AdminPage = () => {
         onCancel={() => setIsDeleteConfirmVisible(false)}
         okText="Yes, Delete"
         cancelText="Cancel"
-      >â
+      >
         <p style={{ color: 'black' }}>{currentQuestion?.text}</p>
       </Modal>
 
