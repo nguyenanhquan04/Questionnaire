@@ -6,7 +6,7 @@ import {
   ProFormText,
 } from "@ant-design/pro-components";
 import { Tabs, message, theme } from "antd";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { login, register } from '../../api/AuthService';
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
@@ -21,6 +21,18 @@ const Login = ({onLogin}) => {
   const [reenterPassword, setReenterPassword] = useState(""); // State to track the re-entered password input
   const { token } = theme.useToken();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem("authToken");
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      if (decodedToken.role === "ADMIN") {
+        navigate(ROUTES.adminPage); 
+      } else if (decodedToken.role === "INTERN") {
+        navigate(ROUTES.internPage); 
+      }
+    }
+  }, [navigate]);
 
   const handleGetCaptcha = async () => {
     if (!email) {
