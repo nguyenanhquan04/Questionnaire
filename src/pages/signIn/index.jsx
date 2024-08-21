@@ -7,12 +7,20 @@ import {
 } from "@ant-design/pro-components";
 import { Tabs, message, theme } from "antd";
 import { useState } from "react";
+import { login, register } from '../../api/AuthService';
+import { jwtDecode } from "jwt-decode";
+import { useNavigate } from "react-router-dom";
+import ROUTES from "../../routes";
 
-const Page = () => {
+const Login = ({onLogin}) => {
   const [loginType, setLoginType] = useState("signIn");
   const [otpSent, setOtpSent] = useState(false); // State to track if OTP is sent
   const [email, setEmail] = useState(""); // State to track the email input
+  const [fullName, setFullName] = useState(""); // State to track the full name input
+  const [password, setPassword] = useState(""); // State to track the password input
+  const [reenterPassword, setReenterPassword] = useState(""); // State to track the re-entered password input
   const { token } = theme.useToken();
+  const navigate = useNavigate();
 
   const handleGetCaptcha = async () => {
     if (!email) {
@@ -21,6 +29,50 @@ const Page = () => {
     }
     message.success("OTP is sent to your email");
     setOtpSent(true); // Set OTP sent status to true
+  };
+
+  const handleSubmit = async () => {
+    if (loginType === "signIn") {
+      try {
+        const user = await login(email, password);
+        const authToken = user.data.token;
+
+        if (user) {
+          localStorage.setItem("authToken", JSON.stringify(authToken));
+          message.success("Login successful!");
+
+          const decodedToken = jwtDecode(authToken);
+  
+          // Notify the Header component about the login
+          onLogin(authToken);
+  
+          if (decodedToken.role === "ADMIN") {
+            navigate(ROUTES.adminPage); 
+          } else if (decodedToken.role === "INTERN") {
+            navigate(ROUTES.internPage); 
+          }
+        }        
+      } catch (error) {
+        if (error.response && error.response.status === 403) {
+          message.error("Username or password is incorrect or account does not exist");
+        } else {
+          message.error("An unexpected error occurred. Please try again.");
+        }
+        console.error("Login failed", error);
+      }
+    } else if (loginType === "signUp") {
+      if (password !== reenterPassword) {
+        message.error("Passwords do not match!");
+        return;
+      }
+      try {
+        await register(fullName, email, password);
+        message.success("Registration successful!");
+        setLoginType("signIn");
+      } catch (error) {
+        message.error("Registration failed, please try again.");
+      }
+    }
   };
 
   return (
@@ -34,7 +86,12 @@ const Page = () => {
       }}
     >
       <LoginFormPage
-        submitter={{ searchConfig: { submitText: "Login" } }}
+        submitter={{
+          searchConfig: { submitText: "OK" },
+          submitButtonProps: {
+            onClick: handleSubmit, // Handle form submission
+          },
+        }}
         backgroundImageUrl="https://mdn.alipayobjects.com/huamei_gcee1x/afts/img/A*y0ZTS6WLwvgAAAAAAAAAAAAADml6AQ/fmt.webp"
         logo="/logo.jpg"
         backgroundVideoUrl="https://gw.alipayobjects.com/v/huamei_gcee1x/afts/video/jXRBRK_VAwoAAAAAAAAAAAAAK4eUAQBr"
@@ -76,7 +133,7 @@ const Page = () => {
         >
           <Tabs.TabPane key={"signIn"} tab={"Sign In"} />
           <Tabs.TabPane key={"signUp"} tab={"Sign Up"} />
-          <Tabs.TabPane key={"forgotPassword"} tab={"Forgot Password"} />
+          {/* <Tabs.TabPane key={"forgotPassword"} tab={"Forgot Password"} /> */}
         </Tabs>
 
         {loginType === "signIn" && (
@@ -101,6 +158,7 @@ const Page = () => {
                   message: "Email is required!",
                 },
               ]}
+              onChange={(e) => setEmail(e.target.value)} // Update email state on change
             />
             <ProFormText.Password
               name="password"
@@ -122,12 +180,35 @@ const Page = () => {
                   message: "Password is required!",
                 },
               ]}
+              onChange={(e) => setPassword(e.target.value)} // Update password state on change
             />
           </>
         )}
 
         {loginType === "signUp" && (
           <>
+            <ProFormText
+              name="fullName"
+              fieldProps={{
+                size: "large",
+                prefix: (
+                  <UserOutlined
+                    style={{
+                      color: token.colorText,
+                    }}
+                    className={"prefixIcon"}
+                  />
+                ),
+              }}
+              placeholder={"Full Name"}
+              rules={[
+                {
+                  required: true,
+                  message: "Full name is required!",
+                },
+              ]}
+              onChange={(e) => setFullName(e.target.value)} // Update full name state on change
+            />
             <ProFormText
               name="username"
               fieldProps={{
@@ -148,6 +229,7 @@ const Page = () => {
                   message: "Email is required!",
                 },
               ]}
+              onChange={(e) => setEmail(e.target.value)} // Update email state on change
             />
             <ProFormText.Password
               name="password"
@@ -169,6 +251,7 @@ const Page = () => {
                   message: "Password is required!",
                 },
               ]}
+              onChange={(e) => setPassword(e.target.value)} // Update password state on change
             />
             <ProFormText.Password
               name="reenter-password"
@@ -190,6 +273,7 @@ const Page = () => {
                   message: "Re-enter Password is required!",
                 },
               ]}
+              onChange={(e) => setReenterPassword(e.target.value)} // Update re-enter password state on change
             />
           </>
         )}
@@ -271,9 +355,10 @@ const Page = () => {
                       message: "New Password is required!",
                     },
                   ]}
+                  onChange={(e) => setPassword(e.target.value)} // Update password state on change
                 />
                 <ProFormText.Password
-                  name="reenter-new-password"
+                  name="reenter-password"
                   fieldProps={{
                     size: "large",
                     prefix: (
@@ -285,13 +370,14 @@ const Page = () => {
                       />
                     ),
                   }}
-                  placeholder={"Re-enter New Password"}
+                  placeholder={"Re-enter Password"}
                   rules={[
                     {
                       required: true,
-                      message: "Re-enter New Password is required!",
+                      message: "Re-enter Password is required!",
                     },
                   ]}
+                  onChange={(e) => setReenterPassword(e.target.value)} // Update re-enter password state on change
                 />
               </>
             )}
@@ -302,10 +388,11 @@ const Page = () => {
   );
 };
 
-export default () => {
+
+export default ({onLogin}) => {
   return (
     <ProConfigProvider dark>
-      <Page />
+      <Login onLogin={ onLogin }/>
     </ProConfigProvider>
   );
 };

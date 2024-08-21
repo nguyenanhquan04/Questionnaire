@@ -69,7 +69,7 @@ const InternPage = () => {
   };
 
   return (
-    <div className="admin-page"> {/* Reuse the styles from AdminPage */}
+    <div className="admin-page" style={{marginTop: 15, marginBottom: 15}}> {/* Reuse the styles from AdminPage */}
       <div style={{ marginBottom: 16, textAlign: 'center' }}>
         <Button type="primary" onClick={showAddModal}>
           Add Question
