@@ -6,13 +6,12 @@ import ToastNotification, { notifySuccess } from '../../components/Toastify';
 import { answerQuestion, deleteQuestion } from '../../slices/questionsSlice';
 import '../adminPage/index.scss';
 
-
 const { Text } = Typography;
 const { TextArea } = Input;
 const { Option } = Select;
 
 const AdminPage = () => {
-  const questions = useSelector((state) => state.questions);
+  const questions = useSelector(state => state.questions);
   const dispatch = useDispatch();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -20,7 +19,6 @@ const AdminPage = () => {
   const [currentQuestion, setCurrentQuestion] = useState(null);
   const [answer, setAnswer] = useState('');
   const [filter, setFilter] = useState('all');
-
 
   const showAnswerModal = (question) => {
     setCurrentQuestion(question);
@@ -56,11 +54,10 @@ const AdminPage = () => {
     setFilter(value);
   };
 
-
   const filteredQuestions = questions.filter(question => {
     if (filter === 'answered') {
       return question.answer;
-    } else if (filter === "unanswered") {
+    } else if (filter === 'unanswered') {
       return !question.answer;
     } else {
       return true;
@@ -68,9 +65,8 @@ const AdminPage = () => {
   });
 
   return (
-
     <div className="admin-page">
-      <div style={{ marginBottom: 16, textAlign: 'center' }}>
+      <div style={{ marginBottom: 2, textAlign: 'center' }}>
         <Select defaultValue="all" onChange={handleFilterChange} style={{ width: 200 }} className="blue-select">
           <Option value="all">All Questions</Option>
           <Option value="answered">Answered</Option>
@@ -89,7 +85,7 @@ const AdminPage = () => {
                 style={{
                   width: 240,
                   margin: '10px',
-                  background: ['#ffc', '#cfc', '#ccf'][question.id % 3],
+                  background: ['#FDBCCF','#F9E1E0' ,'#DFC7C1','#A2CDF2','#F2B9AC'][question.id % 5],
                   transform: `rotate(${(question.id % 2 === 0 ? 4 : -4) + (question.id % 3 === 0 ? -3 : 0)}deg)`,
                   boxShadow: '5px 5px 7px rgba(33,33,33,.7)',
                   transition: 'transform .15s linear',
@@ -111,23 +107,10 @@ const AdminPage = () => {
                   </div>
                 }
               >
-                <Text strong style={{ color: "black" }}>
-                  Answer:
-                </Text>
-                <Text style={{ color: "black" }}>
-                  {question.answer || "No answer yet"}
-                </Text>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "flex-end",
-                    marginTop: 10,
-                  }}
-                >
-                  <Button
-                    type="primary"
-                    onClick={() => showAnswerModal(question)}
-                  >
+                <Text strong style={{ color: 'black' }}>Answer:</Text> 
+                <Text style={{ color: 'black' }}>{question.answer || 'No answer yet'}</Text>
+                <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 10 }}>
+                  <Button type="primary" className="answer-button" onClick={() => showAnswerModal(question)}>
                     Answer
                   </Button>
                 </div>
@@ -166,7 +149,7 @@ const AdminPage = () => {
         onCancel={() => setIsDeleteConfirmVisible(false)}
         okText="Yes, Delete"
         cancelText="Cancel"
-      >
+      >â
         <p style={{ color: 'black' }}>{currentQuestion?.text}</p>
       </Modal>
 
