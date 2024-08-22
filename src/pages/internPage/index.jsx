@@ -4,7 +4,7 @@ import { Card, Button, Row, Col, Typography, Modal, Input } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import ToastNotification, { notifySuccess } from '../../components/Toastify';
 import { addQuestion, deleteQuestion, updateQuestion } from '../../slices/questionsSlice';
-import '../internPage/index.scss'; 
+import '../internPage/index.scss';
 
 const { Text } = Typography;
 const { TextArea } = Input;
@@ -62,14 +62,14 @@ const InternPage = () => {
 
   const getColSpan = () => {
     const count = questions.length;
-    if (count === 1) return 24; // Full width for 1 card
-    if (count === 2) return 12; // Half width for 2 cards
-    if (count === 3) return 8;  // One-third width for 3 cards
-    return 6; // Default, one-fourth width for 4 or more cards
+    if (count === 1) return 24; // Full width
+    if (count === 2) return 12; // Half width
+    if (count === 3) return 8;  // One-third width
+    return 6; // Default, one-fourth width
   };
 
   return (
-    <div className="admin-page" style={{marginTop: 15, marginBottom: 15}}> {/* Reuse the styles from AdminPage */}
+    <div className="intern-page">
       <div style={{ marginBottom: 16, textAlign: 'center' }}>
         <Button type="primary" onClick={showAddModal}>
           Add Question
@@ -138,12 +138,22 @@ const InternPage = () => {
         onCancel={handleCancel}
         okText="Submit"
         cancelText="Cancel"
+        centered // Center the modal on the screen
+        width={500} // Adjust the width as needed
       >
         <TextArea
           rows={4}
           value={questionText}
           onChange={(e) => setQuestionText(e.target.value)}
           placeholder="Enter your question here"
+          style={{
+            backgroundColor: '#f5f5f5',
+            borderRadius: '4px',
+            borderColor: '#d9d9d9',
+            color: '#333',
+            padding: '10px',
+            marginBottom: '20px',
+          }}
         />
       </Modal>
 
@@ -154,8 +164,10 @@ const InternPage = () => {
         onCancel={() => setIsDeleteConfirmVisible(false)}
         okText="Yes, Delete"
         cancelText="Cancel"
+        centered
+        width={400}
       >
-        <p style={{ color: 'black' }}>{currentQuestion?.text}</p>
+        <p>{currentQuestion?.text}</p>
       </Modal>
 
       <ToastNotification />

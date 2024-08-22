@@ -16,7 +16,6 @@
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     grid-gap: 16px;
-    /* Space between cards */
     justify-items: center;
   }
 
@@ -25,7 +24,6 @@
     color: #000;
     border-radius: 8px;
     width: 240px;
-    /* Ensure cards have a fixed width */
     box-shadow: 5px 5px 7px rgba(33, 33, 33, 0.7);
     transition: transform 0.15s linear;
 
@@ -42,19 +40,16 @@
     }
 
     position: relative;
-    /* For pin positioning */
   }
 
   .pin-icon {
     position: absolute;
     top: -12px;
-    /* Slightly above the card */
     left: 50%;
     transform: translateX(-50%);
     font-size: 24px;
     color: red;
     z-index: 1;
-    /* Ensure it's above the card */
   }
 
   .ant-card-head {

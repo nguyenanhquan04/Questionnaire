@@ -6,25 +6,53 @@ body {
   padding: 20px;
   margin-bottom: 40px;
 
+  .ant-select {
+    margin-bottom: 16px;
+    width: 200px;
+  }
+
   .card-container {
     background-color: #e0b084;
     border: 10px solid #a0522d;
     border-radius: 12px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-    padding: 40px 0;
-    display: flex;
-    justify-content: flex-start;
-    padding-left: 60px;
+    padding: 40px 60px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    grid-gap: 16px;
+    justify-items: center;
   }
 
   .ant-card {
     background-color: #fff3cd;
     color: #000;
     border-radius: 8px;
-    min-height: 150px;
+    width: 240px;
+    box-shadow: 5px 5px 7px rgba(33, 33, 33, 0.7);
+    transition: transform 0.15s linear;
     position: relative;
-    margin: 10px;
-    box-shadow: 3px 5px 30px 0px rgba(178, 178, 178, 0.7);
+
+    &:nth-child(odd) {
+      transform: rotate(-1deg);
+    }
+
+    &:nth-child(even) {
+      transform: rotate(1deg);
+    }
+
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+
+  .pin-icon {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 24px;
+    color: red;
+    z-index: 1;
   }
 
   .ant-card-head {
@@ -38,7 +66,7 @@ body {
   }
 
   .ant-card-actions {
-    position: absolute;
+    position: relative;
     bottom: 10px;
     right: 10px;
 
@@ -48,51 +76,12 @@ body {
       border: none;
       margin-left: 5px;
       cursor: pointer;
-    }
-  }
 
-  .ant-modal {
-    .ant-modal-header {
-      background-color: #333;
-      color: #fff;
-    }
-
-    .ant-modal-title {
-      color: #fff;
-    }
-
-    .ant-modal-body {
-      background-color: #444;
-      color: #fff;
-    }
-
-    .ant-input {
-      background-color: #555;
-      color: #fff;
-      border: 1px solid #777;
-
-      &::placeholder {
-        color: #bbb;
+      &:hover {
+        background-color: #0050b3;
+        color: #fff;
       }
     }
-
-    .ant-btn-primary {
-      background-color: #e74c3c;
-      border: none;
-    }
-
-    .ant-btn-default {
-      border: 1px solid #777;
-      color: #fff;
-    }
-  }
-
-  .ant-modal-confirm-body {
-    color: #fff;
-  }
-
-  .ant-typography {
-    color: #000;
   }
 
   .delete-icon {
@@ -103,22 +92,85 @@ body {
     font-size: 16px;
     cursor: pointer;
   }
+}
 
-  .pin-icon {
-    position: absolute;
-    top: 2%;
-    left: 43%;
-    transform: translate(-50%, -50%);
-    font-size: 24px;
-    z-index: 1;
-    color: red;
+.ant-modal {
+  .ant-modal-header {
+    background-color: #333;
+    color: #fff;
+    border-bottom: none;
+    padding: 16px 24px;
   }
 
-  .edit-button {
-    transition: background-color 0.3s ease, color 0.3s ease;
+  .ant-modal-title {
+    color: #fff;
+    font-size: 18px;
   }
 
-  .edit-button:hover {
+  .ant-modal-body {
+    background-color: #f5f5f5;
+    /* Lighter background for better contrast */
+    color: #333;
+    padding: 24px;
+  }
+
+  .ant-input {
+    background-color: #fff;
+    color: #333;
+    border: 1px solid #d9d9d9;
+    border-radius: 4px;
+    padding: 10px;
+    margin-bottom: 16px;
+
+    &::placeholder {
+      color: #bbb;
+    }
+  }
+
+  .ant-modal-footer {
+    background-color: #333;
+    color: #fff;
+    border-top: none;
+    padding: 10px 24px;
+    /* Adjusted padding for better alignment */
+    display: flex;
+    justify-content: flex-end;
+    /* Align buttons to the right */
+    gap: 8px;
+    /* Space between the buttons */
+  }
+
+  .ant-btn-primary {
+    background-color: #e74c3c;
+    border: none;
+    border-radius: 4px;
+    /* Rounding to match input fields */
+    padding: 6px 16px;
+    font-weight: bold;
+    /* Bold text for prominence */
+  }
+
+  .ant-btn-default {
+    border: 1px solid #d9d9d9;
+    color: #333;
+    border-radius: 4px;
+    padding: 6px 16px;
+    font-weight: bold;
+  }
+}
+
+.ant-modal-confirm-body {
+  color: #fff;
+}
+
+.ant-typography {
+  color: #000;
+}
+
+.edit-button {
+  transition: background-color 0.3s ease, color 0.3s ease;
+
+  &:hover {
     background-color: #0050b3;
     color: #fff;
   }
