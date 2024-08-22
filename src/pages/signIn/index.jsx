@@ -50,7 +50,7 @@ const Login = ({onLogin}) => {
         const authToken = user.data.token;
 
         if (user) {
-          localStorage.setItem("authToken", JSON.stringify(authToken));
+          localStorage.setItem("authToken", authToken);
           message.success("Login successful!");
 
           const decodedToken = jwtDecode(authToken);

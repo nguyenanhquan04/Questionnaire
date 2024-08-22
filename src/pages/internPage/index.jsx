@@ -1,22 +1,47 @@
-import { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React, { useState, useEffect } from 'react';
 import { Card, Button, Row, Col, Typography, Modal, Input } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import ToastNotification, { notifySuccess } from '../../components/Toastify';
-import { addQuestion, deleteQuestion, updateQuestion } from '../../slices/questionsSlice';
 import '../internPage/index.scss';
+import { addQuestion, deleteQuestion, updateQuestion } from '../../api/QuestionService';
+import { fetchQuestions } from '../../Helpers';
+import { useNavigate } from 'react-router-dom';
+import ROUTES from "../../routes";
+import {jwtDecode} from "jwt-decode";
 
 const { Text } = Typography;
 const { TextArea } = Input;
 
 const InternPage = () => {
-  const questions = useSelector(state => state.questions);
-  const dispatch = useDispatch();
-
+  const [questions, setQuestions] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteConfirmVisible, setIsDeleteConfirmVisible] = useState(false);
   const [currentQuestion, setCurrentQuestion] = useState(null);
   const [questionText, setQuestionText] = useState('');
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem("authToken");
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      if (decodedToken.role === "ADMIN") {
+        navigate(ROUTES.adminPage); 
+      } else if (decodedToken.role === "INTERN") {
+        navigate(ROUTES.internPage); 
+      }
+    } else {
+      navigate(ROUTES.signIn);
+    }
+  }, [navigate]);
+
+  useEffect(() => {
+    const getQuestions = async () => {
+      const questionsData = await fetchQuestions();
+      setQuestions(questionsData);
+    };
+
+    getQuestions();
+  }, []);
 
   const showAddModal = () => {
     setCurrentQuestion(null);
@@ -30,15 +55,37 @@ const InternPage = () => {
     setIsModalOpen(true);
   };
 
-  const handleOk = () => {
+  const handleOk = async () => {
     if (questionText.trim()) {
-      if (currentQuestion) {
-        dispatch(updateQuestion({ id: currentQuestion.id, text: questionText }));
-        notifySuccess('Question updated successfully');
-      } else {
-        dispatch(addQuestion({ id: Date.now(), text: questionText, answer: '' }));
-        notifySuccess('Question added successfully');
+      const authToken = localStorage.getItem('authToken'); // Retrieve the authToken from localStorage
+
+      try {
+        if (currentQuestion) {
+          // Update existing question
+          await updateQuestion(currentQuestion.id, questionText, authToken);
+          notifySuccess('Question updated successfully');
+        } else {
+          // Add new question
+          const response = await addQuestion(questionText, authToken);
+          notifySuccess('Question added successfully');
+
+          // Optionally, update the questions list with the new question
+          const newQuestion = {
+            id: response.data.questionId,
+            text: response.data.question,
+            answer: 'No answer yet',
+            userId: response.data.userId,
+            deleted: false,
+          };
+          setQuestions([...questions, newQuestion]);
+        }
+
+        // Re-fetch questions to ensure the list is up-to-date
+        await fetchQuestions();
+      } catch (error) {
+        console.error('Error adding or updating question:', error);
       }
+
       setIsModalOpen(false);
       setQuestionText('');
     }
@@ -54,10 +101,21 @@ const InternPage = () => {
     setIsDeleteConfirmVisible(true);
   };
 
-  const handleDelete = () => {
-    dispatch(deleteQuestion(currentQuestion.id));
+  const handleDelete = async () => {
+    if (currentQuestion) {
+      try {
+        const authToken = localStorage.getItem('authToken'); // Retrieve the authToken from localStorage
+        await deleteQuestion(currentQuestion.id, authToken);
+        notifySuccess('Question deleted successfully');
+        // Re-fetch questions and update state
+      const questionsData = await fetchQuestions();
+      setQuestions(questionsData);
+      } catch (error) {
+        console.error('Error deleting question:', error);
+      }
+    }
+
     setIsDeleteConfirmVisible(false);
-    notifySuccess('Question deleted successfully');
   };
 
   const getColSpan = () => {
@@ -118,8 +176,8 @@ const InternPage = () => {
                 }
               >
                 <div className="pin-icon">📌</div>
-                <Text strong style={{ color: 'black' }}>Answer:</Text> 
-                <Text style={{ color: 'black' }}>{question.answer || 'No answer yet'}</Text>
+                <Text strong style={{ color: 'black' }}>Answer: </Text> 
+                <Text style={{ color: 'black' }}>{question.answer || "No answer yet"}</Text>
                 <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 10 }}>
                   <Button type="primary" className="edit-button" onClick={() => showEditModal(question)}>
                     Edit
@@ -138,8 +196,8 @@ const InternPage = () => {
         onCancel={handleCancel}
         okText="Submit"
         cancelText="Cancel"
-        centered // Center the modal on the screen
-        width={500} // Adjust the width as needed
+        centered
+        width={500}
       >
         <TextArea
           rows={4}
