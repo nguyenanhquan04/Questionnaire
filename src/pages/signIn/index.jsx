@@ -11,6 +11,7 @@ import { login, register } from '../../api/AuthService';
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import ROUTES from "../../routes";
+import { checkAuthToken } from "../../helper/Helpers";
 
 const Login = ({onLogin}) => {
   const [loginType, setLoginType] = useState("signIn");
@@ -23,15 +24,7 @@ const Login = ({onLogin}) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem("authToken");
-    if (token) {
-      const decodedToken = jwtDecode(token);
-      if (decodedToken.role === "ADMIN") {
-        navigate(ROUTES.adminPage); 
-      } else if (decodedToken.role === "INTERN") {
-        navigate(ROUTES.internPage); 
-      }
-    }
+    checkAuthToken(navigate);
   }, [navigate]);
 
   const handleGetCaptcha = async () => {
@@ -40,7 +33,7 @@ const Login = ({onLogin}) => {
       return;
     }
     message.success("OTP is sent to your email");
-    setOtpSent(true); // Set OTP sent status to true
+    setOtpSent(true); 
   };
 
   const handleSubmit = async () => {
@@ -55,7 +48,6 @@ const Login = ({onLogin}) => {
 
           const decodedToken = jwtDecode(authToken);
   
-          // Notify the Header component about the login
           onLogin(authToken);
   
           if (decodedToken.role === "ADMIN") {

@@ -4,10 +4,8 @@ import { DeleteOutlined } from '@ant-design/icons';
 import ToastNotification, { notifySuccess } from '../../components/Toastify';
 import '../internPage/index.scss';
 import { addQuestion, deleteQuestion, updateQuestion } from '../../api/QuestionService';
-import { fetchQuestions } from '../../Helpers';
+import { checkAuthToken, fetchQuestions } from '../../helper/Helpers';
 import { useNavigate } from 'react-router-dom';
-import ROUTES from "../../routes";
-import {jwtDecode} from "jwt-decode";
 
 const { Text } = Typography;
 const { TextArea } = Input;
@@ -21,17 +19,7 @@ const InternPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem("authToken");
-    if (token) {
-      const decodedToken = jwtDecode(token);
-      if (decodedToken.role === "ADMIN") {
-        navigate(ROUTES.adminPage); 
-      } else if (decodedToken.role === "INTERN") {
-        navigate(ROUTES.internPage); 
-      }
-    } else {
-      navigate(ROUTES.signIn);
-    }
+    checkAuthToken(navigate);
   }, [navigate]);
 
   useEffect(() => {

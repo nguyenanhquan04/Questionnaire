@@ -1,5 +1,7 @@
-import { getAnswerByQuestionId } from "./api/AnswerService";
-import { getAllQuestions } from "./api/QuestionService";
+import { getAnswerByQuestionId } from "../api/AnswerService";
+import { getAllQuestions } from "../api/QuestionService";
+import {jwtDecode} from 'jwt-decode';
+import ROUTES from '../routes';
 
 export const fetchQuestions = async () => {
     try {
@@ -24,5 +26,19 @@ export const fetchQuestions = async () => {
       return questionsWithAnswers;
     } catch (error) {
       console.error('Error fetching questions or answers:', error);
+    }
+  };
+
+  export const checkAuthToken = (navigate) => {
+    const token = localStorage.getItem("authToken");
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      if (decodedToken.role === "ADMIN") {
+        navigate(ROUTES.adminPage); 
+      } else if (decodedToken.role === "INTERN") {
+        navigate(ROUTES.internPage); 
+      }
+    } else {
+      navigate(ROUTES.signIn);
     }
   };

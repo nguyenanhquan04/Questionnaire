@@ -1,11 +1,11 @@
 import React, { Suspense } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import ROUTES from './routes';
+import ROUTES from '.';
 
-const Home = React.lazy(() => import('../src/pages/homepage'));
-const SignInPage = React.lazy(() => import('../src/pages/signIn'));
-const InternPage = React.lazy(() => import('../src/pages/internPage'));
-const AdminPage = React.lazy(() => import('../src/pages/adminPage'));
+const Home = React.lazy(() => import('../pages/homepage'));
+const SignInPage = React.lazy(() => import('../pages/signIn'));
+const InternPage = React.lazy(() => import('../pages/internPage'));
+const AdminPage = React.lazy(() => import('../pages/adminPage'));
 
 function AppRoutes({ onLogin }) {
   return (

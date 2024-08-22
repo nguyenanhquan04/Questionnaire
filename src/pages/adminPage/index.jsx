@@ -2,13 +2,11 @@ import React, { useState, useEffect } from "react";
 import { Card, Button, Row, Col, Typography, Modal, Input, Select } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 import ToastNotification, { notifySuccess } from "../../components/Toastify";
-import { fetchQuestions } from "../../Helpers";
+import { checkAuthToken, fetchQuestions } from "../../helper/Helpers";
 import "../adminPage/index.scss";
 import { deleteQuestion } from "../../api/QuestionService";
 import { createAnswer, updateAnswer } from "../../api/AnswerService";
 import { useNavigate } from "react-router-dom";
-import ROUTES from "../../routes";
-import {jwtDecode} from "jwt-decode";
 
 const { Text } = Typography;
 const { TextArea } = Input;
@@ -24,17 +22,7 @@ const AdminPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem("authToken");
-    if (token) {
-      const decodedToken = jwtDecode(token);
-      if (decodedToken.role === "ADMIN") {
-        navigate(ROUTES.adminPage); 
-      } else if (decodedToken.role === "INTERN") {
-        navigate(ROUTES.internPage); 
-      }
-    } else {
-      navigate(ROUTES.signIn);
-    }
+    checkAuthToken(navigate);
   }, [navigate]);
 
   useEffect(() => {
