@@ -1,11 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { Card, Button, Row, Col, Typography, Modal, Input } from 'antd';
-import { DeleteOutlined } from '@ant-design/icons';
-import ToastNotification, { notifySuccess } from '../../components/Toastify';
-import '../internPage/index.scss';
-import { addQuestion, deleteQuestion, updateQuestion } from '../../api/QuestionService';
-import { checkAuthToken, fetchQuestions } from '../../helper/Helpers';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { Card, Button, Row, Col, Typography, Modal, Input } from "antd";
+import { DeleteOutlined } from "@ant-design/icons";
+import ToastNotification, { notifySuccess } from "../../components/Toastify";
+import "../internPage/index.scss";
+import {
+  addQuestion,
+  deleteQuestion,
+  updateQuestion,
+} from "../../api/QuestionService";
+import { checkAuthToken, fetchQuestions } from "../../helper/Helpers";
+import { useNavigate } from "react-router-dom";
 
 const { Text } = Typography;
 const { TextArea } = Input;
@@ -15,7 +19,7 @@ const InternPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteConfirmVisible, setIsDeleteConfirmVisible] = useState(false);
   const [currentQuestion, setCurrentQuestion] = useState(null);
-  const [questionText, setQuestionText] = useState('');
+  const [questionText, setQuestionText] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -33,7 +37,7 @@ const InternPage = () => {
 
   const showAddModal = () => {
     setCurrentQuestion(null);
-    setQuestionText('');
+    setQuestionText("");
     setIsModalOpen(true);
   };
 
@@ -45,43 +49,43 @@ const InternPage = () => {
 
   const handleOk = async () => {
     if (questionText.trim()) {
-      const authToken = localStorage.getItem('authToken'); // Retrieve the authToken from localStorage
+      const authToken = localStorage.getItem("authToken"); // Retrieve the authToken from localStorage
 
       try {
         if (currentQuestion) {
           // Update existing question
           await updateQuestion(currentQuestion.id, questionText, authToken);
-          notifySuccess('Question updated successfully');
+          notifySuccess("Question updated successfully");
         } else {
           // Add new question
           const response = await addQuestion(questionText, authToken);
-          notifySuccess('Question added successfully');
+          notifySuccess("Question added successfully");
 
           // Optionally, update the questions list with the new question
           const newQuestion = {
             id: response.data.questionId,
             text: response.data.question,
-            answer: 'No answer yet',
+            answer: "No answer yet",
             userId: response.data.userId,
             deleted: false,
           };
           setQuestions([...questions, newQuestion]);
         }
 
-        // Re-fetch questions to ensure the list is up-to-date
-        await fetchQuestions();
+        const questionsData = await fetchQuestions();
+        setQuestions(questionsData);
       } catch (error) {
-        console.error('Error adding or updating question:', error);
+        console.error("Error adding or updating question:", error);
       }
 
       setIsModalOpen(false);
-      setQuestionText('');
+      setQuestionText("");
     }
   };
 
   const handleCancel = () => {
     setIsModalOpen(false);
-    setQuestionText('');
+    setQuestionText("");
   };
 
   const showDeleteConfirm = (question) => {
@@ -92,14 +96,13 @@ const InternPage = () => {
   const handleDelete = async () => {
     if (currentQuestion) {
       try {
-        const authToken = localStorage.getItem('authToken'); // Retrieve the authToken from localStorage
+        const authToken = localStorage.getItem("authToken"); // Retrieve the authToken from localStorage
         await deleteQuestion(currentQuestion.id, authToken);
-        notifySuccess('Question deleted successfully');
-        // Re-fetch questions and update state
-      const questionsData = await fetchQuestions();
-      setQuestions(questionsData);
+        notifySuccess("Question deleted successfully");
+        const questionsData = await fetchQuestions();
+        setQuestions(questionsData);
       } catch (error) {
-        console.error('Error deleting question:', error);
+        console.error("Error deleting question:", error);
       }
     }
 
@@ -110,13 +113,13 @@ const InternPage = () => {
     const count = questions.length;
     if (count === 1) return 24; // Full width
     if (count === 2) return 12; // Half width
-    if (count === 3) return 8;  // One-third width
+    if (count === 3) return 8; // One-third width
     return 6; // Default, one-fourth width
   };
 
   return (
     <div className="intern-page">
-      <div style={{ marginBottom: 16, textAlign: 'center' }}>
+      <div style={{ marginBottom: 16, textAlign: "center" }}>
         <Button type="primary" onClick={showAddModal}>
           Add Question
         </Button>
@@ -125,38 +128,47 @@ const InternPage = () => {
       <div className="card-container">
         <Row gutter={[16, 16]} justify="center">
           {questions.map((question) => (
-            <Col 
-              key={question.id} 
-              xs={24} 
-              sm={getColSpan()} 
+            <Col
+              key={question.id}
+              xs={24}
+              sm={getColSpan()}
               md={getColSpan()}
               lg={getColSpan()}
               xl={getColSpan()}
-              style={{ display: 'flex', justifyContent: 'center' }}
+              style={{ display: "flex", justifyContent: "center" }}
             >
               <Card
                 size="small"
                 hoverable
                 style={{
                   width: 240,
-                  margin: '10px',
-                  background: ['#FDBCCF', '#F9E1E0', '#DFC7C1', '#A2CDF2', '#F2B9AC'][question.id % 5],
-                  transform: `rotate(${(question.id % 2 === 0 ? 4 : -4) + (question.id % 3 === 0 ? -3 : 0)}deg)`,
-                  boxShadow: '5px 5px 7px rgba(33,33,33,.7)',
-                  transition: 'transform .15s linear',
-                  position: 'relative',
+                  margin: "10px",
+                  background: [
+                    "#FDBCCF",
+                    "#F9E1E0",
+                    "#DFC7C1",
+                    "#A2CDF2",
+                    "#F2B9AC",
+                  ][question.id % 5],
+                  transform: `rotate(${
+                    (question.id % 2 === 0 ? 4 : -4) +
+                    (question.id % 3 === 0 ? -3 : 0)
+                  }deg)`,
+                  boxShadow: "5px 5px 7px rgba(33,33,33,.7)",
+                  transition: "transform .15s linear",
+                  position: "relative",
                 }}
                 title={
-                  <div style={{ position: 'relative' }}>
-                    <Text style={{ color: 'black' }}>{question.text}</Text>
+                  <div style={{ position: "relative" }}>
+                    <Text style={{ color: "black" }}>{question.text}</Text>
                     <DeleteOutlined
                       style={{
-                        position: 'absolute',
+                        position: "absolute",
                         top: 0,
                         right: 0,
-                        color: 'red',
-                        fontSize: '16px',
-                        cursor: 'pointer',
+                        color: "red",
+                        fontSize: "16px",
+                        cursor: "pointer",
                       }}
                       onClick={() => showDeleteConfirm(question)}
                     />
@@ -164,10 +176,24 @@ const InternPage = () => {
                 }
               >
                 <div className="pin-icon">📌</div>
-                <Text strong style={{ color: 'black' }}>Answer: </Text> 
-                <Text style={{ color: 'black' }}>{question.answer || "No answer yet"}</Text>
-                <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 10 }}>
-                  <Button type="primary" className="edit-button" onClick={() => showEditModal(question)}>
+                <Text strong style={{ color: "black" }}>
+                  Answer:{" "}
+                </Text>
+                <Text style={{ color: "black" }}>
+                  {question.answer || "No answer yet"}
+                </Text>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    marginTop: 10,
+                  }}
+                >
+                  <Button
+                    type="primary"
+                    className="edit-button"
+                    onClick={() => showEditModal(question)}
+                  >
                     Edit
                   </Button>
                 </div>
@@ -193,12 +219,12 @@ const InternPage = () => {
           onChange={(e) => setQuestionText(e.target.value)}
           placeholder="Enter your question here"
           style={{
-            backgroundColor: '#f5f5f5',
-            borderRadius: '4px',
-            borderColor: '#d9d9d9',
-            color: '#333',
-            padding: '10px',
-            marginBottom: '20px',
+            backgroundColor: "#f5f5f5",
+            borderRadius: "4px",
+            borderColor: "#d9d9d9",
+            color: "#333",
+            padding: "10px",
+            marginBottom: "20px",
           }}
         />
       </Modal>
