@@ -13,3 +13,9 @@ html, body {
   padding: 0;
   box-sizing: border-box;
 }
+
+.child-centered{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

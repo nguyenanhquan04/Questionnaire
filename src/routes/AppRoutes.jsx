@@ -3,9 +3,11 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import ROUTES from '.';
 
 const Home = React.lazy(() => import('../pages/homepage'));
-const SignInPage = React.lazy(() => import('../pages/signIn'));
+// const SignInPage = React.lazy(() => import('../pages/signIn'));
 const InternPage = React.lazy(() => import('../pages/internPage'));
 const AdminPage = React.lazy(() => import('../pages/adminPage'));
+
+const SignInPage = React.lazy(() => import('../pages/newSignIn'));
 
 function AppRoutes({ onLogin }) {
   return (
